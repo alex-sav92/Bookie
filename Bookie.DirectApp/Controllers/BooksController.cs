@@ -8,80 +8,82 @@ namespace Bookie.DirectApp.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly BookieDirectAppContext _context;
         private readonly IConfiguration _config;
+        private IBooksService _booksService;
+        private IAuthorsService _authorsService;
 
-        public BooksController(BookieDirectAppContext context, IConfiguration config)
+        public BooksController(IConfiguration config, IBooksService booksService, IAuthorsService authorsService)
         {
-            _context = context;
             _config = config;
+            _booksService = booksService;
+            _authorsService = authorsService;
         }
 
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            var books = await _context.Books.ToListAsync();
+            var books = await _booksService.GetAllBooks();
             return View(books);
         }
 
         // GET: Books/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Books == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.BookId == id);
+            var book = _booksService.GetBook(id.Value);
             if (book == null)
             {
                 return NotFound();
             }
 
-            return View(book);
+            var bookModel = book.ToViewModel();
+
+            SetAuthors(bookModel);
+
+            return View(bookModel);
         }
 
-        // GET: Books/Create
+        private void SetAuthors(BookViewModel bookModel)
+        {
+            var authors = _authorsService.GetBookAuthors(bookModel.BookId);
+            bookModel.Authors = string.Join(", ", authors.Select(a => a.Name));
+        }
+
+        //// GET: Books/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Books/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Books/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,Title,Description,PublishedOn,Publisher,Price,ImageUrl")] Book book)
+        public IActionResult Create([Bind("BookId,Title,Description,PublishedOn,Publisher,Price,ImageUrl")] Book book)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
+                _booksService.AddBook(book);
                 return RedirectToAction(nameof(Index));
-            }
-
-            else 
-            {
-                foreach (var err in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    string message = err.ErrorMessage;
-                }
             }
 
             return View(book);
         }
 
-        // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        //// GET: Books/Edit/5
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.Books == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Books.FindAsync(id);
+            var book = _booksService.GetBook(id.Value);
             if (book == null)
             {
                 return NotFound();
@@ -89,12 +91,12 @@ namespace Bookie.DirectApp.Controllers
             return View(book);
         }
 
-        // POST: Books/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Books/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,Description,PublishedOn,Publisher,Price,ImageUrl")] Book book)
+        public IActionResult Edit(int id, [Bind("BookId,Title,Description,PublishedOn,Publisher,Price,ImageUrl")] Book book)
         {
             if (id != book.BookId)
             {
@@ -105,12 +107,11 @@ namespace Bookie.DirectApp.Controllers
             {
                 try
                 {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
+                    _booksService.UpdateBook(id, book);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.BookId))
+                    if (!_booksService.Exists(book.BookId))
                     {
                         return NotFound();
                     }
@@ -124,16 +125,15 @@ namespace Bookie.DirectApp.Controllers
             return View(book);
         }
 
-        // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        //// GET: Books/Delete/5
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.Books == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.BookId == id);
+            var book = _booksService.GetBook(id.Value);
             if (book == null)
             {
                 return NotFound();
@@ -142,28 +142,39 @@ namespace Bookie.DirectApp.Controllers
             return View(book);
         }
 
-        // POST: Books/Delete/5
+        //// POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if (_context.Books == null)
-            {
-                return Problem("Entity set 'BookieDirectAppContext.Book'  is null.");
-            }
-            var book = await _context.Books.FindAsync(id);
+            var book = _booksService.GetBook(id);
             if (book != null)
             {
-                _context.Books.Remove(book);
+                _booksService.DeleteBook(id);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        public IActionResult AddAuthor(int id) 
         {
-          return _context.Books.Any(e => e.BookId == id);
+            var book = _booksService.GetBook(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new AddAuthor { BookId = id };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult AddAuthor(int id, AddAuthor posted) 
+        {
+            _booksService.AddAuthorToBook(id, posted.AuthorName);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

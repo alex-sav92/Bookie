@@ -4,6 +4,7 @@ using Bookie.DirectApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookie.DirectApp.Migrations
 {
     [DbContext(typeof(BookieDirectAppContext))]
-    partial class BookieDirectAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230221183322_Validations")]
+    partial class Validations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Author", (string)null);
+                    b.ToTable("Author");
                 });
 
             modelBuilder.Entity("Bookie.DirectApp.Models.Book", b =>
@@ -50,8 +53,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -74,7 +76,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.HasKey("BookId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Bookie.DirectApp.Models.BookAuthor", b =>
@@ -98,7 +100,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BookAuthor", (string)null);
+                    b.ToTable("BookAuthor");
                 });
 
             modelBuilder.Entity("Bookie.DirectApp.Models.PriceOffer", b =>
@@ -124,7 +126,7 @@ namespace Bookie.DirectApp.Migrations
                     b.HasIndex("BookId")
                         .IsUnique();
 
-                    b.ToTable("PriceOffers", (string)null);
+                    b.ToTable("PriceOffers");
                 });
 
             modelBuilder.Entity("Bookie.DirectApp.Models.Review", b =>
@@ -140,8 +142,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumStars")
                         .HasColumnType("int");
@@ -154,7 +155,7 @@ namespace Bookie.DirectApp.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Review", (string)null);
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Bookie.DirectApp.Models.BookAuthor", b =>

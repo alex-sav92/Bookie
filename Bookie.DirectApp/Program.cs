@@ -12,6 +12,9 @@ builder.Services.AddDbContext<BookieDirectAppContext>(options =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<IBooksService, BooksService>();
+builder.Services.AddScoped<IAuthorsService, AuthorsService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

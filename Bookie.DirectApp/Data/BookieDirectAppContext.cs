@@ -37,8 +37,12 @@ namespace Bookie.DirectApp.Data
 
         public DbSet<Book> Books { get; set; } = default!;
 
-        public DbSet<Author> Authors { get;set; } = default!;
+        public DbSet<Author> Author { get;set; } = default!;
+
+        public DbSet<BookAuthor> BookAuthor { get; set; } = default!;
 
         public DbSet<PriceOffer> PriceOffers { get; set; } = default!;
+
+        public DbSet<Review> Review { get; set; } = default!;
     }
 }

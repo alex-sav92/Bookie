@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Bookie.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookieApiContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BookieApiContext") ?? throw new InvalidOperationException("Connection string 'BookieApiContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BookieContext") ?? throw new InvalidOperationException("Connection string 'BookieApiContext' not found.")));
 
 // Add services to the container.
 

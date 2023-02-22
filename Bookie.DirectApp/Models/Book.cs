@@ -104,7 +104,8 @@ namespace Bookie.DirectApp.Models
             vm.PublishedOn = book.PublishedOn.Date.ToShortDateString();
             vm.Publisher = book.Publisher;
             vm.BookId = book.BookId;
-          
+            vm.ImageUrl = book.ImageUrl;
+
             return vm;
         }
     }

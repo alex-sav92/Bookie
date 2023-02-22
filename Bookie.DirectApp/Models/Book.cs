@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -39,10 +40,12 @@ namespace Bookie.DirectApp.Models
         [MaxLength(100, ErrorMessage = "Maximum 100 characters on Author name")]
         public string Name { get; set; }
     }
+
+    [PrimaryKey(nameof(BookId), nameof(AuthorId))]
     public class BookAuthor
     {
-        public int BookAuthorId { get; set; }
         public int BookId { get; set; }
+
         public int AuthorId { get; set; }
         public int DisplayOrder { get; set; }
     }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Bookie.DirectApp.Data;
 using Bookie.DirectApp.Models;
 using Bookie.DirectApp.Services;
+using Bookie.DirectApp.ViewModels;
 
 namespace Bookie.DirectApp.Controllers
 {

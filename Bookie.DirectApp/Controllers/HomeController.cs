@@ -1,4 +1,4 @@
-﻿using Bookie.DirectApp.Models;
+﻿using Bookie.DirectApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

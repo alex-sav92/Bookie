@@ -1,4 +1,4 @@
-namespace Bookie.DirectApp.Models
+namespace Bookie.DirectApp.ViewModels
 {
     public class ErrorViewModel
     {

@@ -1,12 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Bookie.DirectApp.Data;
-using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Bookie.DirectApp.Services;
+using Auth0.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookieDirectAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BookieDirectAppContext") ?? throw new InvalidOperationException("Connection string 'BookieDirectAppContext' not found.")));
+
+builder.Services.AddAuth0WebAppAuthentication(options => {
+        options.Domain = builder.Configuration["Auth0:Domain"];
+        options.ClientId = builder.Configuration["Auth0:ClientId"];
+        options.Scope = "openid profile email";
+    });
 
 // Add services to the container.
 
@@ -29,6 +34,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

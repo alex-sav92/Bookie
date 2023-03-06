@@ -151,6 +151,31 @@ namespace Bookie.DirectApp.Services
                 _context.SaveChanges();
             }
         }
+
+        public void AddToFavorites(string email, int id)
+        {
+            _context.Favorites.Add(new Favorite { UserEmail = email, BookId = id });
+            _context.SaveChanges();
+        }
+
+        public bool IsInUserFavorites(string email, int id)
+        {
+            var fav = _context.Favorites.FirstOrDefault(f => f.UserEmail == email && f.BookId == id);
+
+            return fav != null;
+        }
+
+        public async Task<List<Book>> GetFavoriteBooks(string email) 
+        {
+            var ids = await _context.Favorites
+                .Where(f => f.UserEmail == email)
+                .Select(b => b.BookId)
+                .ToListAsync();
+
+            var books = GetBooks().Where(b => ids.Contains(b.BookId));
+
+            return await books.ToListAsync();
+        }
     }
 
     public interface IBooksService
@@ -165,5 +190,8 @@ namespace Bookie.DirectApp.Services
 
         public bool Exists(int id);
         public void AddAuthorToBook(int id, string authorName);
+        public void AddToFavorites(string email, int id);
+        public Task<List<Book>> GetFavoriteBooks(string email);
+        public bool IsInUserFavorites(string email, int id);
     }
 }

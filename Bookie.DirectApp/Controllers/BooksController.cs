@@ -58,6 +58,8 @@ namespace Bookie.DirectApp.Controllers
 
             SetAuthors(bookModel);
 
+            SetIsFavorite(bookModel);
+
             return View(bookModel);
         }
 
@@ -65,6 +67,11 @@ namespace Bookie.DirectApp.Controllers
         {
             var authors = _authorsService.GetBookAuthors(bookModel.BookId);
             bookModel.Authors = string.Join(", ", authors.Select(a => a.Name));
+        }
+
+        private void SetIsFavorite(BookViewModel bookModel) 
+        {
+            bookModel.IsFavorite = _booksService.IsInUserFavorites(GetUserEmail(), bookModel.BookId);
         }
 
         //// GET: Books/Create
@@ -189,6 +196,22 @@ namespace Bookie.DirectApp.Controllers
             _booksService.AddAuthorToBook(id, posted.AuthorName);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public IActionResult Favorite(int id) 
+        {
+            var email = GetUserEmail();
+
+            _booksService.AddToFavorites(email, id);
+
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+        private string GetUserEmail() 
+        {
+            var email = User.Claims.First(c => c.Properties.Any(p => p.Value == "email"));
+            return email.Value;
         }
     }
 }

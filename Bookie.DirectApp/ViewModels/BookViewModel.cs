@@ -12,6 +12,8 @@ namespace Bookie.DirectApp.ViewModels
         public string PublishedOn { get; set; }
         public string ImageUrl { get; set; }
         public string Publisher { get; set; }
+
+        public bool IsFavorite { get; set; }
     }
 
     public static class Extensions

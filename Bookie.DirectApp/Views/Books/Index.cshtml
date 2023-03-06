@@ -10,32 +10,26 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group row">
         <div class="col-lg-2">
-            <label>Title or description</label>
             <input asp-for="Filters.Title" class="form-control" placeholder="text..." />
         </div>
         <div class="col-lg-1">
-            <label>Price from</label>
             <input asp-for="Filters.PriceFrom" class="form-control" type="number" />
         </div>
         <div class="col-lg-1">
-            <label>Price to</label>
             <input asp-for="Filters.PriceTo" class="form-control" type="number" />
         </div>
         <div class="col-lg-2">
-            <label>Publish times</label>
             <select asp-for="Filters.PublishTime" class="form-control" 
                 asp-items="@(new SelectList(Model.Filters.PublishTimes, "Value", "Key"))">
-                <option>Publish time</option>
+                <option>All times</option>
             </select>
         </div>
         <div class="col-lg-2">
-            <label class="control-label">Sort by</label>
             <select asp-for="Filters.SortOption" class="form-control"
                 asp-items="@(new SelectList(Model.Filters.SortOptions, "Value", "Key"))">
             </select>
         </div>
         <div class="col-lg-2">
-            <label>Filter</label>
             <input type="submit" value="Filter" class="btn btn-success" />
         </div>
     </div>

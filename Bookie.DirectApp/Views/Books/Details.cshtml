@@ -7,15 +7,9 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Book</h4>
+    <h4>@Html.DisplayFor(model => model.Title) @(Model.IsFavorite ? "♥" : "")</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Authors)
         </dt>
@@ -64,6 +58,14 @@
 <div>
     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> 
     <a class="btn btn-primary" asp-action="Delete" asp-route-id="@Model?.BookId">Delete</a> 
-    <a class="btn btn-primary" asp-action="AddAuthor" asp-route-id="@Model?.BookId">Add author</a> 
+    @if(!Model.IsFavorite)
+    {
+        <a class="btn btn-default" asp-action="Favorite" asp-route-id="@Model?.BookId">♥</a>
+    }
+    else
+    {
+        <a class="btn btn-default" asp-action="Unfavorite" asp-route-id="@Model?.BookId">💔</a>
+    }
+    <a class="btn btn-primary" asp-action="AddAuthor" asp-route-id="@Model?.BookId">Add author</a>
     <a asp-action="Index">Back to List</a>
 </div>

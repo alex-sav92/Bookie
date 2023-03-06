@@ -46,5 +46,7 @@ namespace Bookie.DirectApp.Data
         public DbSet<PriceOffer> PriceOffers { get; set; } = default!;
 
         public DbSet<Review> Review { get; set; } = default!;
+
+        public DbSet<Favorite> Favorites { get; set;} = default!; 
     }
 }

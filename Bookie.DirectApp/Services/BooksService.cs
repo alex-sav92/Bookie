@@ -1,5 +1,6 @@
 ﻿using Bookie.DirectApp.Data;
 using Bookie.DirectApp.Models;
+using Bookie.DirectApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookie.DirectApp.Services
@@ -16,6 +17,61 @@ namespace Bookie.DirectApp.Services
         public async Task<List<Book>> GetAllBooks()
         {
             return await _context.Books.ToListAsync();
+        }
+
+        private IQueryable<Book> GetBooks()
+        {
+            return _context.Books.AsQueryable();
+        }
+
+        public async Task<List<Book>> GetBooks(BookFilterOptions filters, int? limit = null) 
+        {
+            var filtered = GetBooks();
+            if (!string.IsNullOrEmpty(filters.Title))
+            {
+                filtered = filtered.Where(b => b.Title.Contains(filters.Title));
+            }
+            if (filters.PriceFrom != 0 && filters.PriceTo != 0) 
+            {
+                filtered = filtered.Where(b => b.Price >= filters.PriceFrom && b.Price <= filters.PriceTo);
+            }
+
+            if (filters.PublishTime != null) 
+            {
+                var publishLimits = filters.GetPublishTimes();
+
+                filtered = filtered.Where(b => b.PublishedOn >= publishLimits.Item1 && b.PublishedOn <= publishLimits.Item2);
+            }
+
+            if (filters.SortOption != null) 
+            {
+                switch (filters.SortOption) 
+                {
+                    case "ByPriceAsc":
+                        filtered = filtered.OrderBy(b => b.Price);
+                        break;
+                    case "ByPriceDesc":
+                        filtered = filtered.OrderByDescending(b => b.Price); 
+                        break;
+                    case "ByMostRecent":
+                        filtered = filtered.OrderByDescending(b => b.PublishedOn); 
+                        break;
+                    case "ByOldest":
+                        filtered = filtered.OrderBy(b => b.PublishedOn); 
+                        break;
+
+                    default:
+                        filtered = filtered.OrderByDescending(b => b.PublishedOn);
+                        break;
+                }
+            }
+
+            if (limit.HasValue) 
+            {
+                filtered = filtered.Take(limit.Value);
+            }
+
+            return await filtered.ToListAsync();
         }
 
         public Book? GetBook(int id) 
@@ -100,6 +156,8 @@ namespace Bookie.DirectApp.Services
     public interface IBooksService
     {
         public Task<List<Book>> GetAllBooks();
+        public Task<List<Book>> GetBooks(BookFilterOptions filters, int? limit = null);
+        
         public Book? GetBook(int id);
         public int AddBook(Book book);
         public void UpdateBook(int id, Book newBook);

@@ -4,6 +4,7 @@ using Bookie.DirectApp.Data;
 using Bookie.DirectApp.Models;
 using Bookie.DirectApp.Services;
 using Bookie.DirectApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bookie.DirectApp.Controllers
 {
@@ -21,13 +22,25 @@ namespace Bookie.DirectApp.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public async Task<IActionResult> Index(BooksList posted)
         {
-            var books = await _booksService.GetAllBooks();
-            return View(books);
+
+            var books = await _booksService.GetBooks(posted.Filters, 40);
+
+            var booksList = new BooksList();
+            foreach (var book in books)
+            {
+                booksList.Books.Add(book.ToViewModel());
+            }
+
+            booksList.PopulateFilterOptions();
+
+            return View("Index", booksList);
         }
 
         // GET: Books/Details/5
+        [Authorize]
         public IActionResult Details(int? id)
         {
             if (id == null)

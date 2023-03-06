@@ -4,5 +4,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <h3><a class="nav-link" asp-area="" asp-controller="Books" asp-action="Index">Books</a></h3>
+
+    @if (User.Identity.IsAuthenticated) 
+    {
+        <h3><a class="nav-link" asp-area="" asp-controller="Books" asp-action="Index">Books</a></h3>
+    }
+    else
+    {
+        <h3>Login to browse books</h3>
+    }
 </div>

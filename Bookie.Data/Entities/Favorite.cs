@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Bookie.DirectApp.Models
+namespace Bookie.Data.Entities
 {
     [PrimaryKey(nameof(UserEmail), nameof(BookId))]
     public class Favorite

@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Bookie.DirectApp.Models
+namespace Bookie.Data.Entities
 {
-    public class Review
+    public class ReviewUnindexed
     {
-        public int ReviewId { get; set; }
+        public int ReviewUnindexedId { get; set; }
         public int BookId { get; set; }
 
         [Required]

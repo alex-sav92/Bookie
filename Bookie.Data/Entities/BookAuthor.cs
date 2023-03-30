@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Bookie.DirectApp.Models
+namespace Bookie.Data.Entities
 {
     [PrimaryKey(nameof(BookId), nameof(AuthorId))]
     public class BookAuthor

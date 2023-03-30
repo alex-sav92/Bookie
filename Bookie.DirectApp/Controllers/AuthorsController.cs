@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Bookie.DirectApp.Data;
 using Bookie.DirectApp.Models;
 using Bookie.DirectApp.Services;
+using Bookie.Data.Entities;
 
 namespace Bookie.DirectApp.Controllers
 {

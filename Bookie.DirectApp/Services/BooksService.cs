@@ -1,6 +1,9 @@
-﻿using Bookie.DirectApp.Data;
+﻿using BenchmarkDotNet.Attributes;
+using Bookie.Data;
+using Bookie.Data.Entities;
 using Bookie.DirectApp.Models;
 using Bookie.DirectApp.ViewModels;
+using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookie.DirectApp.Services
@@ -176,6 +179,48 @@ namespace Bookie.DirectApp.Services
 
             return await books.ToListAsync();
         }
+
+        public decimal AveragePrice() 
+        {
+            var x = _context.Books.Sum(b => b.Price) / _context.Books.Count();
+
+            return x;
+        }
+        
+        public void TestEFExceptions() 
+        {
+            try
+            {
+                _context.Books.Add(new Book
+                {
+                    Description = "soon",
+                    Price = 2,
+                    ImageUrl = "pics.com/book1",
+                    Publisher = "Nemira",
+                    Title = "Once upon a time there was a queen"
+                });
+
+                _context.SaveChanges();
+            }
+            catch (UniqueConstraintException e)
+            {
+                //Handle exception here
+            }
+            catch (CannotInsertNullException e)
+            {
+                //Handle exception here
+            }
+            catch (MaxLengthExceededException e)
+            {
+                //Handle exception here
+            }
+        }
+
+
+        public Task<List<Book>> TestReadAllEntities()
+        {
+            return _context.Books.ToListAsync();
+        }
     }
 
     public interface IBooksService
@@ -193,5 +238,8 @@ namespace Bookie.DirectApp.Services
         public void AddToFavorites(string email, int id);
         public Task<List<Book>> GetFavoriteBooks(string email);
         public bool IsInUserFavorites(string email, int id);
+        public decimal AveragePrice();
+
+        public Task<List<Book>> TestReadAllEntities();
     }
 }

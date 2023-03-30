@@ -1,4 +1,5 @@
-﻿using Bookie.DirectApp.Models;
+﻿using Bookie.Data.Entities;
+using Bookie.DirectApp.Models;
 
 namespace Bookie.DirectApp.ViewModels
 {

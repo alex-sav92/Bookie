@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Bookie.DirectApp.Data;
 using Bookie.DirectApp.Models;
 using Bookie.DirectApp.Services;
 using Bookie.DirectApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Bookie.Data.Entities;
 
 namespace Bookie.DirectApp.Controllers
 {
@@ -27,6 +27,8 @@ namespace Bookie.DirectApp.Controllers
         {
 
             var books = await _booksService.GetBooks(posted.Filters, 40);
+
+            var avgPrice = _booksService.AveragePrice();
 
             var booksList = new BooksList();
             foreach (var book in books)

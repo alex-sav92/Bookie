@@ -4,14 +4,12 @@ using BenchmarkEF;
 using Bookie.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-
 Console.WriteLine("Hello, World!");
 
-var summary = BenchmarkRunner.Run(typeof(TestsAverageBookPrice)); 
+
+var summary = BenchmarkRunner.Run(typeof(TestsIQueryableFilter)); 
 //TestsAverageBookPrice //ContextPooling //Projections
 //TestsIQueryable
-
-//var context = new BookieDbContext();
 
 // N+1
 //context.NPlus1Problem();

@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace BenchmarkEF
 {
-    public class TestsTracking
+    [MemoryDiagnoser]
+    public class TestsIQueryableFilter
     {
         private BookieDbContext _db;
 
@@ -17,22 +18,26 @@ namespace BenchmarkEF
         public void GlobalSetup()
         {
             var _options = new DbContextOptionsBuilder<BookieDbContext>()
+                .LogTo(Console.WriteLine)
                 .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
                 .Options;
             _db = new BookieDbContext(_options);
         }
 
-        [Benchmark(Baseline = true)]
-        public List<Book> AsTracking()
+        [Benchmark]
+        public void IEnumerable()
         {
-            return _db.Books.ToList();
+            IEnumerable<Book> books = _db.Books;
+            var filter = books.Where(x => x.BookId >= 2);
+            var results = filter.ToList();
         }
 
         [Benchmark]
-        public List<Book> AsNoTracking()
+        public void IQueryable()
         {
-            return _db.Books.AsNoTracking().ToList();
-            
+            var books = _db.Books.AsQueryable();
+            var filter = books.Where(b => b.BookId >= 2);
+            var results = filter.ToList();
         }
     }
 }

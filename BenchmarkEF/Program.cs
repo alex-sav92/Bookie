@@ -7,14 +7,18 @@ using System.Diagnostics;
 Console.WriteLine("Hello, World!");
 
 
-var summary = BenchmarkRunner.Run(typeof(TestsIQueryableFilter)); 
-//TestsAverageBookPrice //ContextPooling //Projections
-//TestsIQueryable
+//var summary = BenchmarkRunner.Run(typeof(TestsIQueryable)); 
+//TestsAverageBookPrice //ContextPooling //Projections //TestsIQueryable
 
 // N+1
-//context.NPlus1Problem();
-//context.NPlus1Solution1();
-//context.NPlus1Solution2();
+//var options = new DbContextOptionsBuilder<BookieDbContext>()
+//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+//    .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information)
+//    .Options;
+//var context = new BookieDbContext(options);
+//var a1 = context.NPlus1Problem();
+//var a2 = context.NPlus1Solution1();
+//var a3 = context.NPlus1Solution2();
 
 //Split queries - Carthesian explosion
 //Console.WriteLine("-----------Split queries - Carthesian explosion-----------");

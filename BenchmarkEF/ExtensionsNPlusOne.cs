@@ -11,22 +11,32 @@ namespace BenchmarkEF
 {
     public static class ExtensionsNPlusOne
     {
-        public static void NPlus1Problem(this BookieDbContext _db)
+        public static double NPlus1Problem(this BookieDbContext _db)
         {
+            double avgReviews = 0;
+            int numReviews = 0;
             var books = _db.Books.Where(b => b.BookId > 520).ToList();
 
             foreach (var book in books)
             {
                 _db.Entry(book).Collection(b => b.Reviews).Load();
 
-                var reviews = book.Reviews
-                    .Where(r => !string.IsNullOrEmpty(r.Comment))
-                    .ToList();
+                if (book.Reviews != null)
+                {
+                    foreach (var review in book.Reviews)
+                    {
+                        avgReviews += review.NumStars;
+                        numReviews++;
+                    }
+                }
             }
+            return avgReviews / numReviews;
         }
 
-        public static void NPlus1Solution1(this BookieDbContext _db)
+        public static double NPlus1Solution1(this BookieDbContext _db)
         {
+            double avgReviews = 0;
+            int numReviews = 0;
             var books = _db.Books
                 .Where(b => b.BookId > 520)
                 .Include(b => b.Reviews)
@@ -35,22 +45,26 @@ namespace BenchmarkEF
             //this will not generate extra queries:
             foreach (var book in books)
             {
-                var avg = book.Reviews.Average(r => r.NumStars);
+                foreach (var review in book.Reviews) 
+                {
+                    avgReviews += review.NumStars;
+                    numReviews++;
+                }
             }
+            return avgReviews / numReviews;
         }
 
-        public static void NPlus1Solution2(this BookieDbContext _db)
+        public static double NPlus1Solution2(this BookieDbContext _db)
         {
             var books = _db.Books
                 .Where(b => b.BookId > 520)
                 .Select(o => new
                 {
-                    Reviews = o.Reviews
-                        .Where(r => !string.IsNullOrEmpty(r.Comment))
-                        .ToList()
-                })
-                .ToList();
+                    AvgReview = o.Reviews != null ? o.Reviews.Average(r => r.NumStars) : 0
+                }).ToList();
 
+            var avg = books.Sum(b => b.AvgReview) / books.Count;
+            return avg;
         }
 
 

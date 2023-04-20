@@ -32,7 +32,6 @@ namespace BenchmarkEF
         public List<Book> AsNoTracking()
         {
             return _db.Books.AsNoTracking().ToList();
-            
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BenchmarkEF
 {
+    [MemoryDiagnoser]
     public class TestsEagerLoadVsLazyLoad
     {
         private BookieDbContext _db;
@@ -22,21 +23,33 @@ namespace BenchmarkEF
         }
 
         [Benchmark]
+        public void LazyLoadAllRelatedEntities()
+        {
+            var books = _db.Books;
+            var list = books.ToList();
+        }
+
+        [Benchmark]
         public void EagerLoadOnlyReviews()
         {
-            var books = _db.Books.Include(b => b.Reviews).ToList();
+            _db.ChangeTracker.LazyLoadingEnabled = false;
+            var books = _db.Books.Include(b => b.Reviews);
         }
 
         [Benchmark]
         public void EagerLoadOnlyAuthors()
         {
-            var books = _db.Books.Include(b => b.AuthorsLink).ToList();
+            _db.ChangeTracker.LazyLoadingEnabled = false;
+            var books = _db.Books.Include(b => b.AuthorsLink);
         }
 
         [Benchmark]
-        public void LazyLoadAllRelatedEntities()
+        public void EagerLoadAllRelatedEntities()
         {
-            var books = _db.Books.Include(b => b.Reviews).Include(b => b.AuthorsLink);
+            _db.ChangeTracker.LazyLoadingEnabled = false;
+            var books = _db.Books
+                .Include(b => b.AuthorsLink)
+                .Include(b => b.Reviews);
         }
     }
 }

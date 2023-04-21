@@ -26,7 +26,14 @@ namespace BenchmarkEF
         public void LazyLoadAllRelatedEntities()
         {
             var books = _db.Books;
-            var list = books.ToList();
+            
+            foreach(var b in books)
+            {
+                if (b.Reviews != null)
+                    foreach (var r in b.Reviews) { }
+                if (b.AuthorsLink != null)
+                    foreach (var a in b.AuthorsLink) { }
+            }
         }
 
         [Benchmark]

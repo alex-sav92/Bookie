@@ -25,9 +25,7 @@ namespace BenchmarkEF
         {
             var sqlConnectionString = "Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-            options.UseSqlServer(sqlConnectionString
-                 //, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-                 )
+            options.UseSqlServer(sqlConnectionString)
                 .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
                 .EnableSensitiveDataLogging();
         }
@@ -53,5 +51,15 @@ namespace BenchmarkEF
         public DbSet<ReviewUnindexed> ReviewUnindexed { get; set; } = default!;
 
         public DbSet<Favorite> Favorites { get; set; } = default!;
+
+        private static Func<BookieDbContext, string, IEnumerable<Book>?> GetBooksByPublisherQuery =
+            EF.CompileQuery(
+                (BookieDbContext context, string publisher) =>
+                    context.Set<Book>().Where(b => b.Publisher == publisher));
+
+        public IEnumerable<Book>? GetBooksByPublisher(string publisher)
+        {
+            return GetBooksByPublisherQuery(this, publisher);
+        }
     }
 }

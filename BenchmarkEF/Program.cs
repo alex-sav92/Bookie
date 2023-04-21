@@ -7,7 +7,7 @@ using System.Diagnostics;
 Console.WriteLine("Hello, World!");
 
 
-//var summary = BenchmarkRunner.Run(typeof(TestsIQueryable)); 
+var summary = BenchmarkRunner.Run(typeof(CompiledQueries)); 
 //TestsAverageBookPrice //ContextPooling //Projections //TestsIQueryable
 
 // N+1
@@ -15,16 +15,26 @@ Console.WriteLine("Hello, World!");
 //    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
 //    .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information)
 //    .Options;
-//var context = new BookieDbContext(options);
-//var a1 = context.NPlus1Problem();
-//var a2 = context.NPlus1Solution1();
-//var a3 = context.NPlus1Solution2();
+//var db = new BookieDbContext(options);
 
-//Split queries - Carthesian explosion
+//var a1 = db.NPlus1Problem();
+//var a2 = db.NPlus1Solution1();
+//var a3 = db.NPlus1Solution2();
+
+//IQueryable vs IEnumerable
+//IEnumerable<Book> books = db.Books;
+//var filter = books.Where(x => x.BookId >= 2);
+//var results = filter.ToList(); 
+
+//var qBooks = db.Books.AsQueryable();
+//var qFilter = books.Where(b => b.BookId >= 2);
+//var qResults = filter.ToList();
+
+
+//Query splitting - Carthesian explosion
 //Console.WriteLine("-----------Split queries - Carthesian explosion-----------");
 
 //Stopwatch s = new Stopwatch();
-
 //s.Start();
 //var books = context.Books
 //    .Include(b => b.Reviews)
@@ -46,7 +56,6 @@ Console.WriteLine("Hello, World!");
 //Console.WriteLine($"[Split queries] Elapsed: {s.Elapsed.Milliseconds} ms");
 
 //Console.WriteLine("-----------Single Queries-----------");
-
 //s.Start();
 //var booksSingle = context.Books
 //    .AsSingleQuery()

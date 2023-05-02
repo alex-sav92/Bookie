@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Bookie.DirectApp.Data;
-using Bookie.DirectApp.Services;
+﻿using Bookie.DirectApp.Services;
 using Auth0.AspNetCore.Authentication;
+using Bookie.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<BookieDirectAppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BookieDirectAppContext") ?? throw new InvalidOperationException("Connection string 'BookieDirectAppContext' not found.")));
+
+builder.Services.AddTransient<DbInitialiser>();
+builder.Services.AddDbContext<BookieDirectAppContext>();
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
         options.Domain = builder.Configuration["Auth0:Domain"];
@@ -44,3 +44,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+using var scope = app.Services.CreateScope();
+
+var services = scope.ServiceProvider;
+
+var initialiser = services.GetRequiredService<DbInitialiser>();
+
+initialiser.Run();

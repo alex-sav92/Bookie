@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Bookie.Data.Entities;
+using System.Net;
 
 namespace Bookie.Data
 {
@@ -19,7 +20,7 @@ namespace Bookie.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var sqlConnectionString = _config.GetConnectionString("BookieDirectAppContext");
+            var sqlConnectionString = _config.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
             options.UseSqlServer(sqlConnectionString)
                 .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)

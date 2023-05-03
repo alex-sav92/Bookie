@@ -10,9 +10,15 @@ namespace Bookie.Data
 {
     public class BookieDirectAppContext : DbContext
     {
-        private readonly IConfiguration _config;
+        private readonly IConfiguration? _config;
+        private bool IsBenchmarkMode;
 
-        public BookieDirectAppContext(DbContextOptions<BookieDirectAppContext> options, IConfiguration config = null)
+        public BookieDirectAppContext()
+        {
+            IsBenchmarkMode = true;
+            this.OnConfiguring(new DbContextOptionsBuilder<BookieDirectAppContext>());
+        }
+        public BookieDirectAppContext(DbContextOptions<BookieDirectAppContext> options, IConfiguration? config = null)
             : base(options)
         {  
             _config = config;
@@ -20,11 +26,18 @@ namespace Bookie.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var sqlConnectionString = _config.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-
-            options.UseSqlServer(sqlConnectionString)
-                .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
-                .EnableSensitiveDataLogging();
+            if (IsBenchmarkMode) 
+            {
+                var connectionString = "Server=tcp:bookie-server.database.windows.net,1433;Initial Catalog=bookieDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\"";
+                options.UseSqlServer(connectionString);
+            }
+            else
+            {
+                var connectionString = _config!.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"); ;
+                options.UseSqlServer(connectionString)
+                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+                    .EnableSensitiveDataLogging();
+            } 
             
             //options.UseExceptionProcessor();
         }
@@ -51,6 +64,16 @@ namespace Bookie.Data
         public DbSet<Favorite> Favorites { get; set; } = default!;
 
         public DbSet<ReviewUnindexed> ReviewsUnindexed { get; set; } = default!;
+
+        private static Func<BookieDirectAppContext, string, IEnumerable<Book>?> GetBooksByPublisherQuery =
+            EF.CompileQuery(
+                (BookieDirectAppContext context, string publisher) =>
+                    context.Set<Book>().Where(b => b.Publisher == publisher));
+
+        public IEnumerable<Book>? GetBooksByPublisher(string publisher)
+        {
+            return GetBooksByPublisherQuery(this, publisher);
+        }
     }
 
     public class DbInitialiser

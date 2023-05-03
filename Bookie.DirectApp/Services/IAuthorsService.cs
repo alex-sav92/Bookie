@@ -13,5 +13,7 @@ namespace Bookie.DirectApp.Services
         public void UpdateAuthor(int id, Author author);
 
         public void DeleteAuthor(int id);
+
+        public int Count();
     }
 }

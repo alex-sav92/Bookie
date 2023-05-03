@@ -75,5 +75,10 @@ namespace Bookie.DirectApp.Services
                 _context.SaveChanges();
             }
         }
+
+        public int Count() 
+        { 
+            return _context.Author.Count();
+        }
     }
 }

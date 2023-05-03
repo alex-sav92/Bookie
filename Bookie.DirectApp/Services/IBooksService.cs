@@ -18,7 +18,12 @@ namespace Bookie.DirectApp.Services
         public void AddToFavorites(string email, int id);
         public Task<List<Book>> GetFavoriteBooks(string email);
         public bool IsInUserFavorites(string email, int id);
+
         public decimal AveragePrice();
+
+        public int Count();
+
+        public (int, int) CountBooksWithReviews();
 
         public Task<List<Book>> TestReadAllEntities();
     }

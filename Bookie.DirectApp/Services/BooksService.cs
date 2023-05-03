@@ -187,6 +187,11 @@ namespace Bookie.DirectApp.Services
 
             return x;
         }
+
+        public int Count() 
+        { 
+            return _context.Books.Count(); 
+        }
         
         public void TestEFExceptions() 
         {
@@ -221,6 +226,19 @@ namespace Bookie.DirectApp.Services
         public Task<List<Book>> TestReadAllEntities()
         {
             return _context.Books.ToListAsync();
+        }
+
+        public (int, int) CountBooksWithReviews()
+        {
+            var books = _context.Books
+                .Include(b => b.Reviews)
+                .Where(b => b.Reviews != null && b.Reviews.Count > 0);
+
+            var countBooks = books.Count();
+
+            var countReviews = _context.Review.Count();
+
+            return (countBooks, countReviews);
         }
     }
 }

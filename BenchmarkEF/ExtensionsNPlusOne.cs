@@ -11,7 +11,7 @@ namespace BenchmarkEF
 {
     public static class ExtensionsNPlusOne
     {
-        public static double NPlus1Problem(this BookieDbContext _db)
+        public static double NPlus1Problem(this BookieDirectAppContext _db)
         {
             double avgReviews = 0;
             int numReviews = 0;
@@ -33,7 +33,7 @@ namespace BenchmarkEF
             return avgReviews / numReviews;
         }
 
-        public static double NPlus1Solution1(this BookieDbContext _db)
+        public static double NPlus1Solution1(this BookieDirectAppContext _db)
         {
             double avgReviews = 0;
             int numReviews = 0;
@@ -54,7 +54,7 @@ namespace BenchmarkEF
             return avgReviews / numReviews;
         }
 
-        public static double NPlus1Solution2(this BookieDbContext _db)
+        public static double NPlus1Solution2(this BookieDirectAppContext _db)
         {
             var books = _db.Books
                 .Where(b => b.BookId > 520)

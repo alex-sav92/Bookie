@@ -7,28 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bookie.Data.Entities;
+using Bookie.Data;
 
 namespace BenchmarkEF
 {
     [MemoryDiagnoser]
     public class ContextPooling
     {
-        private DbContextOptions<BookieDbContext> _options;
-        private PooledDbContextFactory<BookieDbContext> _poolingFactory;
+        private DbContextOptions<BookieDirectAppContext> _options;
+        private PooledDbContextFactory<BookieDirectAppContext> _poolingFactory;
 
 
         [GlobalSetup]
         public void Setup()
         {
-            _options = new DbContextOptionsBuilder<BookieDbContext>()
-                .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
-                .Options;
-
-            using var db = new BookieDbContext(_options);
+            using var db = new BookieDirectAppContext();
             //context.Database.EnsureDeleted();
             db.Database.EnsureCreated();
 
-            _poolingFactory = new PooledDbContextFactory<BookieDbContext>(_options);
+            _poolingFactory = new PooledDbContextFactory<BookieDirectAppContext>(_options);
         }
 
         [Benchmark]
@@ -36,7 +33,7 @@ namespace BenchmarkEF
         {
             for (int i = 0; i < 10; i++)
             {
-                var context = new BookieDbContext(_options);
+                var context = new BookieDirectAppContext();
                 var book = context.Books.Take(1).ToList();
             }
         }

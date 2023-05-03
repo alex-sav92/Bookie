@@ -1,18 +1,18 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using BenchmarkDotNet.Running;
 using BenchmarkEF;
+using BenchmarkEF.Tests;
 using Bookie.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 Console.WriteLine("Hello, World!");
 
 
-var summary = BenchmarkRunner.Run(typeof(CompiledQueries)); 
-//TestsAverageBookPrice //ContextPooling //Projections //TestsIQueryable
+var summary = BenchmarkRunner.Run(typeof(AverageBookPrice)); 
 
 // N+1
 //var options = new DbContextOptionsBuilder<BookieDbContext>()
-//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=********;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
 //    .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information)
 //    .Options;
 //var db = new BookieDbContext(options);
@@ -67,7 +67,7 @@ var summary = BenchmarkRunner.Run(typeof(CompiledQueries));
 
 // Disabling lazy loading: 
 //var options = new DbContextOptionsBuilder<BookieDbContext>()
-//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=********;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
 //    .Options;
 //var db = new BookieDbContext(options);
 //db.SetLazyLoading(false);
@@ -90,7 +90,7 @@ var summary = BenchmarkRunner.Run(typeof(CompiledQueries));
 
 
 //var options = new DbContextOptionsBuilder<BookieDbContext>()
-//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
+//    .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=********;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
 //    .Options;
 //var db = new BookieDbContext(options);
 //db.SetLazyLoading(false);

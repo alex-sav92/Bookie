@@ -9,21 +9,18 @@ using System.Threading.Tasks;
 
 namespace BenchmarkEF
 {
-    public class TestsAverageBookPrice
+    public class AverageBookPrice
     {
-        private BookieDbContext _db;
+        private BookieDirectAppContext _db;
 
         [GlobalSetup]
         public void GlobalSetup() 
         {
-            var _options = new DbContextOptionsBuilder<BookieDbContext>()
-                .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
-                .Options;
-            _db = new BookieDbContext(_options);
+            _db = new BookieDirectAppContext();
         }
 
         [Benchmark]
-        public double AverageBookPrice()
+        public double AverageBookPrice_ReadAllAndManualMath()
         {
             decimal sum = 0;
             int count = 0;

@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Bookie.Data;
 using Bookie.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,18 +11,14 @@ using System.Threading.Tasks;
 namespace BenchmarkEF
 {
     [MemoryDiagnoser]
-    public class TestsIQueryableFilter
+    public class IQueryableFilter
     {
-        private BookieDbContext _db;
+        private BookieDirectAppContext _db;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            var _options = new DbContextOptionsBuilder<BookieDbContext>()
-                .LogTo(Console.WriteLine)
-                .UseSqlServer("Data Source=bookie-server.database.windows.net;Initial Catalog=bookieDB;User ID=alex-bookie;Password=1-q-a-z-;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False")
-                .Options;
-            _db = new BookieDbContext(_options);
+            _db = new BookieDirectAppContext();
         }
 
         [Benchmark]

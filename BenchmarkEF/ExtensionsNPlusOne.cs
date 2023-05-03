@@ -19,6 +19,7 @@ namespace BenchmarkEF
 
             foreach (var book in books)
             {
+                //this will generate the extra queries
                 _db.Entry(book).Collection(b => b.Reviews).Load();
 
                 if (book.Reviews != null)

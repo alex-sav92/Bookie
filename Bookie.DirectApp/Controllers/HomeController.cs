@@ -1,6 +1,8 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Bookie.DirectApp.Models;
 using Bookie.DirectApp.Services;
 using Bookie.DirectApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using System.Diagnostics;
@@ -10,18 +12,36 @@ namespace Bookie.DirectApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IConfiguration _config;
         private IBooksService _booksService;
-        private readonly ILogger<HomeController> _logger;
+        private IAuthorsService _authorsService;
 
-        public HomeController(ILogger<HomeController> logger, IBooksService booksService)
+        public HomeController(IConfiguration config, IBooksService booksService, IAuthorsService authorsService)
         {
-            _logger = logger;
+            _config = config;
             _booksService = booksService;
+            _authorsService = authorsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var avgPrice = _booksService.AveragePrice();
+            var countBooks = _booksService.Count();
+            var countAuthors = _authorsService.Count();
+
+            (int totalBooksWithReviews, int totalReviews) = _booksService.CountBooksWithReviews();
+
+            var dash = new Dashboard
+            {
+                TotalBooks = countBooks,
+                TotalAuthors = countAuthors,
+                AvgBookPrice = avgPrice,
+                TotalReviews = totalReviews,
+                TotalBooksWithReviews = totalBooksWithReviews
+            };
+
+            return View(dash);
+
         }
 
         public IActionResult Privacy()

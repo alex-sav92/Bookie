@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Dashboard
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -13,4 +14,16 @@
     {
         <h3>Login to browse books</h3>
     }
+
+    <p><strong>@Model.TotalBooks</strong> books in db</p>
+    <p><strong>@Model.TotalAuthors</strong> authors in db</p>
+    <p><strong>@Model.TotalBooksWithReviews</strong> books with reviews in db,</p>
+    <p>summing up <strong>@Model.TotalReviews</strong> reviews</p>
+    
+    <p><strong>@Model.AvgBookPrice.ToString("##.##")</strong> - average book price</p>
+
+    <p>Book -> Author M-M</p>
+    <p>Book -> Review 1-M</p>
+    <p>Book -> Promotion 1-1</p>
+
 </div>

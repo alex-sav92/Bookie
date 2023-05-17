@@ -25,6 +25,8 @@ namespace Bookie.DirectApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var topPublishers = _booksService.GetTopPublishers(5);
+
             var avgPrice = _booksService.AveragePrice();
             var countBooks = _booksService.Count();
             var countAuthors = _authorsService.Count();
@@ -37,7 +39,8 @@ namespace Bookie.DirectApp.Controllers
                 TotalAuthors = countAuthors,
                 AvgBookPrice = avgPrice,
                 TotalReviews = totalReviews,
-                TotalBooksWithReviews = totalBooksWithReviews
+                TotalBooksWithReviews = totalBooksWithReviews,
+                TopPublishers = topPublishers
             };
 
             return View(dash);

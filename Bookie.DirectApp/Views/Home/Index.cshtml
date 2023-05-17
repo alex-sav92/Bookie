@@ -17,13 +17,24 @@
 
 </div>
 <div>
+    <h3>General counts</h3>
     <p><strong>@Model.TotalBooks</strong> books in db</p>
     <p><strong>@Model.TotalAuthors</strong> authors in db</p>
     <p><strong>@Model.TotalBooksWithReviews</strong> books with reviews in db, totalling <strong>@Model.TotalReviews</strong> reviews</p>
     
     <p><strong>@Model.AvgBookPrice.ToString("##.##")</strong> - average book price</p>
 
+    <h3>Relationships</h3>
     <p>Book -> Author M-M</p>
     <p>Book -> Review 1-M</p>
     <p>Book -> Promotion 1-1</p>
+
+
+    <h3>Top 5 publishers</h3>
+    <ol>
+        @foreach (var item in Model.TopPublishers)
+        {
+            <li>@item.Key (@item.Value books)</li>
+        }
+    </ol>
 </div>

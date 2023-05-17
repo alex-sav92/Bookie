@@ -5,6 +5,9 @@ using Bookie.DirectApp.Models;
 using Bookie.DirectApp.ViewModels;
 using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
+using System.Security.Policy;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Bookie.DirectApp.Services
 {
@@ -239,6 +242,17 @@ namespace Bookie.DirectApp.Services
             var countReviews = _context.Review.Count();
 
             return (countBooks, countReviews);
+        }
+
+        public Dictionary<string, int> GetTopPublishers(int count)
+        {
+            var countByPublisher = _context.Books.AsQueryable()
+                .GroupBy(b => b.Publisher)
+                .Select(g => new { Publisher = g.Key, CountBooks = g.Count() })
+                .OrderByDescending(o => o.CountBooks)
+                .Take(count);
+
+            return countByPublisher.ToDictionary(o => o.Publisher, o => o.CountBooks);
         }
     }
 }

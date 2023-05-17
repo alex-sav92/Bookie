@@ -25,6 +25,8 @@ namespace Bookie.DirectApp.Services
 
         public (int, int) CountBooksWithReviews();
 
+        public Dictionary<string, int> GetTopPublishers(int count);
+
         public Task<List<Book>> TestReadAllEntities();
     }
 }

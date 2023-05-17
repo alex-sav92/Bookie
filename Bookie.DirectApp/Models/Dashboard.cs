@@ -7,5 +7,7 @@
         public decimal AvgBookPrice { get; set; }
         public int TotalReviews { get; set; }
         public int TotalBooksWithReviews { get; set; }
+
+        public Dictionary<string, int> TopPublishers { get; set; }
     }
 }

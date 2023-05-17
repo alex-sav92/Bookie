@@ -33,7 +33,7 @@ namespace Bookie.Data
             }
             else
             {
-                var connectionString = _config!.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"); ;
+                var connectionString = _config!.GetConnectionString("SQL_CONNECTIONSTRING");
                 options.UseSqlServer(connectionString)
                     .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
                     .EnableSensitiveDataLogging();

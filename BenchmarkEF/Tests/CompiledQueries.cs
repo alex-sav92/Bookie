@@ -15,8 +15,11 @@ namespace BenchmarkEF.Tests
     public class CompiledQueries
     {
         private BookieDirectAppContext _db;
-        private string[] Top5Publishers = new string[] { 
-            "Manning", "Nemira", "O'Reilly Media", "Penguin", "Little, Brown and Company" };
+        private string Top1 = "Manning";
+        private string Top2 = "Nemira";
+        private string Top3 = "O'Reilly Media";
+        private string Top4 = "Penguin";
+        private string Top5 = "Little, Brown and Company";
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -27,21 +30,21 @@ namespace BenchmarkEF.Tests
         [Benchmark]
         public void TopFivePublishersCompiledQuery()
         {
-            var books = _db.GetBooksByPublisher(Top5Publishers[0]);
-            books = _db.GetBooksByPublisher(Top5Publishers[1]);
-            //books = _db.GetBooksByPublisher(Top5Publishers[2]);
-            //books = _db.GetBooksByPublisher(Top5Publishers[3]);
-            //books = _db.GetBooksByPublisher(Top5Publishers[4]);
+            var books = _db.GetBooksByPublisher(Top1);
+            books = _db.GetBooksByPublisher(Top2);
+            books = _db.GetBooksByPublisher(Top3);
+            books = _db.GetBooksByPublisher(Top4);
+            books = _db.GetBooksByPublisher(Top5);
         }
 
         [Benchmark]
         public void TopFivePublishersIndependentQuery()
         {
-            var books = _db.Books.Where(b => b.Publisher == Top5Publishers[0]);
-            books = _db.Books.Where(b => b.Publisher == Top5Publishers[1]);
-            //books = _db.Books.Where(b => b.Publisher == Top5Publishers[2]);
-            //books = _db.Books.Where(b => b.Publisher == Top5Publishers[3]);
-            //books = _db.Books.Where(b => b.Publisher == Top5Publishers[4]);
+            var books = _db.Books.Where(b => b.Publisher == Top1);
+            books = _db.Books.Where(b => b.Publisher == Top2);
+            books = _db.Books.Where(b => b.Publisher == Top3);
+            books = _db.Books.Where(b => b.Publisher == Top4);
+            books = _db.Books.Where(b => b.Publisher == Top5);
         }
     }
 }

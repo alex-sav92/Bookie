@@ -21,15 +21,6 @@ var summary = BenchmarkRunner.Run(typeof(AverageBookPrice));
 //var a2 = db.NPlus1Solution1();
 //var a3 = db.NPlus1Solution2();
 
-//IQueryable vs IEnumerable
-//IEnumerable<Book> books = db.Books;
-//var filter = books.Where(x => x.BookId >= 2);
-//var results = filter.ToList(); 
-
-//var qBooks = db.Books.AsQueryable();
-//var qFilter = books.Where(b => b.BookId >= 2);
-//var qResults = filter.ToList();
-
 
 //Query splitting - Carthesian explosion
 //Console.WriteLine("-----------Split queries - Carthesian explosion-----------");

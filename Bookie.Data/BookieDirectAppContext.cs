@@ -65,6 +65,8 @@ namespace Bookie.Data
 
         public DbSet<ReviewUnindexed> ReviewsUnindexed { get; set; } = default!;
 
+        public DbSet<Goat> Goats { get; set;} = default!;
+
         private static Func<BookieDirectAppContext, string, IEnumerable<Book>?> GetBooksByPublisherQuery =
             EF.CompileQuery(
                 (BookieDirectAppContext context, string publisher) =>

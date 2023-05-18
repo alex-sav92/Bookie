@@ -8,7 +8,7 @@ using System.Diagnostics;
 Console.WriteLine("Hello, World!");
 
 
-var summary = BenchmarkRunner.Run(typeof(AverageBookPrice)); 
+var summary = BenchmarkRunner.Run(typeof(AsNoTracking)); 
 
 // N+1
 //var options = new DbContextOptionsBuilder<BookieDbContext>()

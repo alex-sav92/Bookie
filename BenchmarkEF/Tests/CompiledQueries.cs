@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 namespace BenchmarkEF.Tests
 {
     [MemoryDiagnoser]
-    //[Config(typeof(BenchConfig))]
-    //[RPlotExporter]
     public class CompiledQueries
     {
         private BookieDirectAppContext _db;

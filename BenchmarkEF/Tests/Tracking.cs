@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BenchmarkEF
 {
+    [MemoryDiagnoser]
     public class Tracking
     {
         private BookieDirectAppContext _db;
